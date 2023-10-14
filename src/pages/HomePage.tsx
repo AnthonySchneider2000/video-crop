@@ -15,6 +15,7 @@ function HomePage() {
   const ffmpegRef = useRef(new FFmpeg());
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const messageRef = useRef<HTMLParagraphElement | null>(null);
+  
 
   const load = async () => {
     const baseURL = "https://unpkg.com/@ffmpeg/core-mt@0.12.4/dist/esm";
@@ -72,6 +73,10 @@ function HomePage() {
   };
 
   useEffect(() => {
+
+    if(crossOriginIsolated) {
+      console.log("Cross Origin Isolated");
+    }
     load();
   }, []);
 
