@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const Header = () => {
   return (
     <header className="flex h-40 flex-row content-center items-center justify-center">
-      <h1 className="text-4xl font-bold">Video Cropper</h1>
+      <h1 className="text-4xl text-center font-bold">Video Cropper</h1>
     </header>
   );
 };
