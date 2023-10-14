@@ -46,8 +46,6 @@ export default function DropzoneComponent({
   className,
   variant,
   size,
-  asChild = false,
-  ...props
 }: DropzoneProps) {
   const { addSelectedFiles } = useFileContext();
 
@@ -56,7 +54,7 @@ export default function DropzoneComponent({
   };
 
   return (
-    <Dropzone onDrop={handleDrop}>
+    <Dropzone onDrop={handleDrop} maxFiles={1} multiple={false}>
       {({ getRootProps, getInputProps }) => (
         <div
           {...getRootProps({ className: "dropzone" })}
