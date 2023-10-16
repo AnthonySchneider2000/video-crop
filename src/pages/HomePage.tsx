@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const Header = () => {
   return (
     <header className="flex h-40 flex-row content-center items-center justify-center">
-      <h1 className="text-4xl text-center font-bold">Video Cropper</h1>
+      <h1 className="text-center text-4xl font-bold">Video Cropper</h1>
     </header>
   );
 };
@@ -65,25 +65,22 @@ function HomePage() {
       return;
     }
     const ffmpeg = ffmpegRef.current;
-    await ffmpeg.writeFile("input.avi", await fetchFile(videoURL));
+    await ffmpeg.writeFile("input.webm", await fetchFile(videoURL));
     // trim video from startTime to endTime
     await ffmpeg.exec([
-      "-i",
-      "input.avi",
       "-ss",
       `${startTime}`,
       "-to",
       `${endTime}`,
+      "-i",
+      "input.webm",
       "-c",
       "copy",
-      "output.mp4",
+      "output.webm",
     ]);
-    const fileData = await ffmpeg.readFile("output.mp4");
-    const data = new Uint8Array(fileData as ArrayBuffer);
+    const data: any = await ffmpeg.readFile("output.webm");
     if (videoRef.current) {
-      videoRef.current.src = URL.createObjectURL(
-        new Blob([data.buffer], { type: "video/mp4" }),
-      );
+      videoRef.current.src = await URL.createObjectURL(new Blob([data.buffer]));
     }
   };
 
@@ -98,16 +95,6 @@ function HomePage() {
     <>
       <Header />
       <div className="flex h-full w-full flex-col items-center justify-center gap-4 p-4">
-        {selectedFiles.length > 0 && (
-          <div className="flex flex-row content-center justify-center gap-4">
-            <video
-              controls
-              className="h-80 w-80"
-              src={URL.createObjectURL(selectedFiles[0])}
-            ></video>
-            <video controls className="h-80 w-80" ref={videoRef}></video>
-          </div>
-        )}
         <DropzoneComponent size="long" />
         <Input
           type="text"
@@ -137,6 +124,16 @@ function HomePage() {
             Crop Video
           </Button>
         </div>
+        {selectedFiles.length > 0 && (
+          <div className="flex flex-row content-center justify-center gap-4">
+            <video
+              controls
+              className="h-80 w-80"
+              src={URL.createObjectURL(selectedFiles[0])}
+            ></video>
+            <video controls className="h-80 w-80" ref={videoRef}></video>
+          </div>
+        )}
       </div>
     </>
   ) : (
@@ -148,12 +145,11 @@ function HomePage() {
         <div className="flex w-full flex-row content-evenly justify-evenly gap-4 ">
           <Skeleton className="h-10 w-1/2 rounded-md" />
           <Skeleton className="h-10 w-1/2 rounded-md" />
-          </div>
+        </div>
         <div className="flex w-full flex-row content-evenly justify-evenly gap-4">
           <Skeleton className="h-20 w-1/2 rounded-md" />
           <Skeleton className="h-20 w-1/2 rounded-md" />
         </div>
-
       </div>
     </>
   );
